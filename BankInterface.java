@@ -1,10 +1,10 @@
 package edu.bank;
 
 public interface BankInterface {
-    void openAccount();
+    void register();
     void closeAccount();
-    void deposit(int deposit);
-    void withdraw(int withdraw);
+    void deposit(float deposit);
+    void withdraw(float withdraw);
     void monthlyPayment();
 
 }
