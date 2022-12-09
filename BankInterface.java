@@ -3,8 +3,8 @@ package edu.bank;
 public interface BankInterface {
     void openAccount();
     void closeAccount();
-    void deposit(float deposit);
-    void withdraw(float withdraw);
+    void deposit(int deposit);
+    void withdraw(int withdraw);
     void monthlyPayment();
-    String accountType();
+
 }

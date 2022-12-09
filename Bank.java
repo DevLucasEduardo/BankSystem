@@ -1,19 +1,21 @@
 package edu.bank;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Bank implements BankInterface {
     private int accNum;
-    private String accType;
+    private int accType;
     private String accOwner;
-    private float accBalance;
+    private int accBalance;
     private boolean status;
-    private String auxAccType;
+
     // Método construtor
 
-    public Bank(int accNum, String accType, String accHolder){
+    public Bank(int accNum, int accType, String accHolder){
         this.setAccNum(accNum);
         this.setAccType(accType);
         this.setAccHolder(accHolder);
-        this.setAccBalance(0f);
+        this.setAccBalance(0);
         this.setStatus(false);
     }
 
@@ -27,19 +29,19 @@ public class Bank implements BankInterface {
         this.accNum = accNum;
     }
 
-    public String getAccType(){
+    public int getAccType(){
         return this.accType;
     }
 
-    public void setAccType(String accType){
+    public void setAccType(int accType){
         this.accType = accType;
     }
 
-    public float getAccBalance(){
+    public int getAccBalance(){
         return this.accBalance;
     }
 
-    public void setAccBalance(float accBalance){
+    public void setAccBalance(int accBalance){
         this.accBalance = accBalance;
     }
 
@@ -63,23 +65,29 @@ public class Bank implements BankInterface {
 
     @Override
     public void openAccount(){
-        if (isStatus()) {
+        if (isStatus()){
             System.out.println("Denied. This account has been opened before.");
             return;
         }
         this.setStatus(true);
-        if (this.getAccType().equals("cp")) {
-            this.setAccBalance(150.0f);
+        if (this.getAccType() == 1) {
+            this.setAccBalance(150);
         }
-        else if (this.getAccType().equals("cc")) {
-            this.setAccBalance(50.0f);
+        else if (this.getAccType() == 2) {
+            this.setAccBalance(50);
         }
-        System.out.printf("Welcome, %s. %s under code %d has been created. Account balance: $%.1f.\n",
-                this.getAccOwner(), this.accountType(), this.getAccNum(), this.getAccBalance());
+        String auxAccType = null;
+        if (accType == 1){
+            auxAccType = "Current account";
+        }else if(accType == 2){
+            auxAccType = "Savings account";
+        }
+        System.out.printf("Welcome, %s. %s under code %d has been created. Account balance: $%d.\n",
+                this.getAccOwner(), auxAccType, this.getAccNum(), this.getAccBalance());
     }
 
     @Override
-    public void deposit(float deposit){
+    public void deposit(int deposit){
         if (this.isStatus()){
             this.accBalance += deposit;
             System.out.println("Account balance after deposit: $" + getAccBalance());
@@ -91,14 +99,42 @@ public class Bank implements BankInterface {
     }
 
     @Override
-    public void withdraw(float withdraw){
+    public void withdraw(int withdraw){
+        List<Integer> bills = new ArrayList<>();
         if(!isStatus()) {
             System.out.println("Denied. This account has been shutdown.");
             return;
         }
         if(this.getAccBalance() >= withdraw){
             this.accBalance -= withdraw;
-            System.out.println("Account balance after withdraw: $" + this.getAccBalance());
+            while (withdraw > 0){
+                if (withdraw >= 100){
+                    withdraw -= 100;
+                    bills.add(100);
+                } else if(withdraw >= 50){
+                    withdraw -= 50;
+                    bills.add(50);
+                } else if(withdraw >= 20){
+                    withdraw -= 20;
+                    bills.add(20);
+                } else if(withdraw >= 10){
+                    withdraw -= 10;
+                    bills.add(10);
+                } else if(withdraw >= 5) {
+                    withdraw -= 5;
+                    bills.add(5);
+                } else if(withdraw >= 2){
+                    withdraw -= 2;
+                    bills.add(2);
+                } else{
+                    withdraw -= 1;
+                    bills.add(1);
+                }
+            }
+            System.out.print("Account balance after withdraw: $" + this.getAccBalance() + ". Bills received: ");
+            for(int values: bills){
+                System.out.print("$" + values + " ");
+            }
         }
         else if(getAccBalance() <= withdraw && getAccBalance() >= 0){
             System.out.println("Denied. The account balance amount is lesser than the withdraw request. " +
@@ -133,26 +169,16 @@ public class Bank implements BankInterface {
             System.out.println("Denied. This account has been shutdown.");
             return;
         }
-        if (getAccType().equals("cc")) {
+        if (getAccType() == 1){
             this.accBalance -= 12;
         }
-        else if (getAccType().equals("cp")) {
+        else if (getAccType() == 2) {
             this.accBalance -= 20;
         }
         System.out.println("Account balance after monthly payment: $" + getAccBalance());
         if (this.getAccBalance() < 0) {
-            System.out.printf("WARNING! Overdraft identified. Please deposit $%.1f in order to keep this account " +
+            System.out.printf("WARNING! Overdraft identified. Please deposit $%d in order to keep this account " +
                     "running.\n", getAccBalance() * -1);
         }
-    }
-
-    @Override
-    public String accountType(){
-        if(this.getAccType().equals("cc")){
-            auxAccType = "checking account";
-        } else if(this.getAccType().equals("cp")){
-            auxAccType = "savings account";
-        }
-        return auxAccType;
     }
 }
