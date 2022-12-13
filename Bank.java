@@ -79,7 +79,6 @@ public class Bank implements BankInterface {
             return;
     }
 
-
     @Override
     public void deposit(float deposit){
         if (this.isStatus()){
@@ -89,7 +88,6 @@ public class Bank implements BankInterface {
         else{
             System.out.println("Denied. This account has been shutdown.");
         }
-
     }
 
     @Override
@@ -139,8 +137,7 @@ public class Bank implements BankInterface {
             System.out.println("Denied. This account is in debt in $" + this.getAccBalance() * - 1 + ".");
         }
     }
-
-
+    
     @Override
     public void closeAccount(){
         if(!this.isStatus()) {

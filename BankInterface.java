@@ -1,7 +1,7 @@
 package edu.bank;
 
 public interface BankInterface {
-    void register();
+    public abstract void register();
     void closeAccount();
     void deposit(float deposit);
     void withdraw(float withdraw);
