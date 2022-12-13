@@ -2,82 +2,37 @@ package edu.bank;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Bank implements BankInterface {
-    private int accNum;
-    private int accType;
-    private String accOwner;
+public class BankSavingsAccount extends BankRegistration implements BankInterface {
+
     private float accBalance;
-    private boolean status;
+    public byte accType = 0;
 
     // Método construtor
 
-    public Bank(int accNum, int accType, String accHolder){
-        this.setAccNum(accNum);
-        this.setAccType(accType);
-        this.setAccHolder(accHolder);
-        this.setAccBalance(0);
-        this.setStatus(false);
+    public BankSavingsAccount(String accHolder){
+        super(accHolder);
+        
     }
 
     // Getters e setters
 
-    public int getAccNum(){
-        return this.accNum;
-    }
 
-    public void setAccNum(int accNum){
-        this.accNum = accNum;
-    }
-
-    public int getAccType(){
-        return this.accType;
-    }
-
-    public void setAccType(int accType){
-        this.accType = accType;
-    }
-
-    public float getAccBalance(){
+    public float getAccBalance() {
         return this.accBalance;
     }
 
-    public void setAccBalance(int accBalance){
+    public void setAccBalance(float accBalance) {
         this.accBalance = accBalance;
     }
 
-    public boolean isStatus() {
-        return status;
+    public byte getAccType() {
+        return accType;
     }
 
-    public void setStatus(boolean status){
-        this.status = status;
+    public void setAccType(byte accType) {
+        this.accType = accType;
     }
-
-    public String getAccOwner(){
-        return this.accOwner;
-    }
-
-    public void setAccHolder(String accHolder){
-        this.accOwner = accHolder;
-    }
-
     // Methods
-
-    @Override
-    public void register(){
-        if (isStatus()){
-            System.out.println("Denied. This account has been opened before.");
-            return;
-        }
-        this.setStatus(true);
-        System.out.printf("Welcome, %s. Account under code %d has been registered\n", this.getAccOwner(), this.getAccNum());
-    }
-    public void createAccType(){
-        return;
-    }
-        public void changeAccType(){
-            return;
-    }
 
     @Override
     public void deposit(float deposit){
@@ -93,7 +48,7 @@ public class Bank implements BankInterface {
     @Override
     public void withdraw(float withdraw){
         List<Integer> bills = new ArrayList<>();
-        if(!isStatus()) {
+        if(!this.isStatus()) {
             System.out.println("Denied. This account has been shutdown.");
             return;
         }
@@ -137,42 +92,7 @@ public class Bank implements BankInterface {
             System.out.println("Denied. This account is in debt in $" + this.getAccBalance() * - 1 + ".");
         }
     }
-    
-    @Override
-    public void closeAccount(){
-        if(!this.isStatus()) {
-            System.out.println("Denied. This account has already been shut down.");
-            return;
-        }
-        if(this.getAccBalance() > 0){
-            System.out.println("This account has been shut down successfully. Last withdraw: $" + getAccBalance()+ ".");
-            setAccBalance(0);
-        }
-        else {
-            System.out.println("This account has been shutdown successfully.");
-        }
-        this.setStatus(false);
-    }
 
-
-    @Override
-    public void monthlyPayment(){
-        if (!isStatus()) {
-            System.out.println("Denied. This account has been shutdown.");
-            return;
-        }
-        if (getAccType() == 1){
-            this.accBalance -= 12;
-        }
-        else if (getAccType() == 2) {
-            this.accBalance -= 20;
-        }
-        System.out.println("Account balance after monthly payment: $" + getAccBalance());
-        if (this.getAccBalance() < 0) {
-            System.out.printf("WARNING! Overdraft identified. Please deposit $%.2f in order to keep this account " +
-                    "running.\n", getAccBalance() * -1);
-        }
-    }
     public void transactions(int transactionType, float amount){
         if(transactionType == 1){
             this.accBalance -= amount;
