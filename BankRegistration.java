@@ -2,20 +2,25 @@ package edu.bank;
 
 import java.util.Random;
 
-public abstract class BankRegistration implements BankRegistrationInterface {
+public abstract class BankRegistration implements BankInterface {
 
     private final int accNum;
     private boolean status;
     private String accHolder;
-    private float accBalance;
+    private boolean accCurrentStatus;
+    private boolean accSavingsStatus;
 
     public BankRegistration(String accHolder) {
         Random random = new Random();
         accNum = random.nextInt(20000);
         this.accHolder = accHolder;
-        this.accBalance = 0;
+        this.accSavingsStatus = false;
+        this.accCurrentStatus = false;
     }
 
+    public int getAccNum() {
+        return accNum;
+    }
 
     public boolean isStatus() {
         return status;
@@ -33,39 +38,43 @@ public abstract class BankRegistration implements BankRegistrationInterface {
         this.accHolder = accHolder;
     }
 
-    public float getAccBalance() {
-        return accBalance;
+    public boolean isAccSavingsStatus() {
+        return accSavingsStatus;
     }
 
-    public void setAccBalance(float accBalance) {
-        this.accBalance = accBalance;
+    public void setAccSavingsStatus(boolean accSavingsStatus) {
+        this.accSavingsStatus = accSavingsStatus;
+    }
+
+    public boolean isAccCurrentStatus() {
+        return accCurrentStatus;
+    }
+
+    public void setAccCurrentStatus(boolean accCurrentStatus) {
+        this.accCurrentStatus = accCurrentStatus;
     }
 
     @Override
     public String registration() {
         if (isStatus()){
             return "Denied. This account has been opened before.";
-
         }
         this.setStatus(true);
         return "Welcome, " + this.getAccHolder() + ". Account under code " + this.accNum + " created.";
     }
 
-
     @Override
-    public void closeAcc() {
-        if(!this.isStatus()) {
-            System.out.println("Denied. This account has already been shut down.");
-            return;
+    public String deleteRegistration(){
+        if(!isStatus()){
+            return "The registration under code " + this.getAccNum() + " has been deleted before.";
+        } else {
+            if (isAccCurrentStatus() && isAccSavingsStatus()) {
+                return "Close your accounts before deleting the registration.";
+            } else {
+                this.setStatus(false);
+                return "Registration under code " + this.getAccNum() + " deleted.";
+            }
         }
-        if(this.getAccBalance() > 0){
-            System.out.println("This account has been shut down successfully. Last withdraw: $" + this.getAccBalance()+ ".");
-            setAccBalance(0);
-        }
-        else {
-            System.out.println("This account has been shutdown successfully.");
-        }
-        this.setStatus(false);
     }
 
 }
